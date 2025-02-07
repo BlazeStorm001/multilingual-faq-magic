@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { FAQEditor } from "./FAQEditor";
+import { FAQCreator } from "./FAQCreator";
 
 const LANGUAGES = [
   { code: "en", name: "English" },
@@ -18,6 +19,7 @@ export function FAQList() {
   const [selectedLang, setSelectedLang] = useState("en");
   const [searchQuery, setSearchQuery] = useState("");
   const [editingFAQ, setEditingFAQ] = useState<FAQ | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   const { data: faqs = [], isLoading, refetch } = useQuery({
     queryKey: ["faqs", selectedLang],
@@ -42,18 +44,24 @@ export function FAQList() {
               className="w-full"
             />
           </div>
-          <Select value={selectedLang} onValueChange={setSelectedLang}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select language" />
-            </SelectTrigger>
-            <SelectContent>
-              {LANGUAGES.map((lang) => (
-                <SelectItem key={lang.code} value={lang.code}>
-                  {lang.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Select value={selectedLang} onValueChange={setSelectedLang}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select language" />
+              </SelectTrigger>
+              <SelectContent>
+                {LANGUAGES.map((lang) => (
+                  <SelectItem key={lang.code} value={lang.code}>
+                    {lang.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button onClick={() => setIsCreating(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Create FAQ
+            </Button>
+          </div>
         </div>
 
         {isLoading ? (
@@ -108,6 +116,16 @@ export function FAQList() {
         onSave={async () => {
           await refetch();
           setEditingFAQ(null);
+        }}
+      />
+
+      <FAQCreator
+        open={isCreating}
+        onClose={() => setIsCreating(false)}
+        onSave={async (newFaq) => {
+          // Implement create functionality
+          await refetch();
+          setIsCreating(false);
         }}
       />
     </div>

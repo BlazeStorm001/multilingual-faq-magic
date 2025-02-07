@@ -1,16 +1,16 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FAQ, updateFAQ } from "@/lib/api";
 import { useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { FAQ } from "@/lib/api";
 
-interface FAQEditorProps {
-  faq: FAQ | null;
+interface FAQCreatorProps {
+  open: boolean;
   onClose: () => void;
-  onSave: () => void;
+  onSave: (faq: Partial<FAQ>) => void;
 }
 
 const LANGUAGES = [
@@ -19,26 +19,24 @@ const LANGUAGES = [
   { code: "fr", name: "French" },
 ];
 
-export function FAQEditor({ faq, onClose, onSave }: FAQEditorProps) {
-  const [formData, setFormData] = useState<Partial<FAQ>>(
-    faq || { question: "", answer: "", language: "en" }
-  );
+export function FAQCreator({ open, onClose, onSave }: FAQCreatorProps) {
+  const [formData, setFormData] = useState<Partial<FAQ>>({
+    question: "",
+    answer: "",
+    language: "en",
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (faq?.id && formData) {
-      const result = await updateFAQ(faq.id, formData);
-      if (result) {
-        onSave();
-      }
-    }
+    onSave(formData);
+    setFormData({ question: "", answer: "", language: "en" });
   };
 
   return (
-    <Dialog open={!!faq} onOpenChange={() => onClose()}>
+    <Dialog open={open} onOpenChange={() => onClose()}>
       <DialogContent className="sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>{faq ? "Edit FAQ" : "Add FAQ"}</DialogTitle>
+          <DialogTitle>Create New FAQ</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -88,7 +86,7 @@ export function FAQEditor({ faq, onClose, onSave }: FAQEditorProps) {
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit">Save</Button>
+            <Button type="submit">Create FAQ</Button>
           </div>
         </form>
       </DialogContent>

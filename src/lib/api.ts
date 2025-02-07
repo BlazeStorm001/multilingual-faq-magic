@@ -28,6 +28,24 @@ export const fetchFAQs = async (lang?: string, id?: number): Promise<FAQ[]> => {
   }
 };
 
+export const createFAQ = async (faq: Partial<FAQ>): Promise<FAQ | null> => {
+  try {
+    const response = await fetch(`${API_URL}/faqs`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(faq),
+    });
+    if (!response.ok) throw new Error("Failed to create FAQ");
+    const data = await response.json();
+    toast.success("FAQ created successfully");
+    return data;
+  } catch (error) {
+    console.error("Error creating FAQ:", error);
+    toast.error("Failed to create FAQ");
+    return null;
+  }
+};
+
 export const updateFAQ = async (id: number, faq: Partial<FAQ>): Promise<FAQ | null> => {
   try {
     const response = await fetch(`${API_URL}/faqs/${id}`, {
