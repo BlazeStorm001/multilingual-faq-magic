@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { FAQ } from "@/lib/api";
+import { FAQ, createFAQ } from "@/lib/api";
 
 interface FAQCreatorProps {
   open: boolean;
@@ -26,10 +26,13 @@ export function FAQCreator({ open, onClose, onSave }: FAQCreatorProps) {
     language: "en",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
-    setFormData({ question: "", answer: "", language: "en" });
+    const result = await createFAQ(formData);
+    if (result) {
+      onSave(result);
+      setFormData({ question: "", answer: "", language: "en" });
+    }
   };
 
   return (
