@@ -58,9 +58,13 @@ export function FAQCreator({ open, onClose, onSave }: FAQCreatorProps) {
               <CKEditor
                 editor={ClassicEditor}
                 data={formData.answer}
+                config={{
+                  removePlugins: ['Markdown'],
+                  toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo']
+                }}
                 onChange={(event, editor) => {
                   const data = editor.getData();
-                  setFormData({ ...formData, answer: data });
+                  setFormData((prev) => ({ ...prev, answer: data }));
                 }}
               />
             </div>
