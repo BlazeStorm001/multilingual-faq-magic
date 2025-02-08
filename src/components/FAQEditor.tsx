@@ -1,9 +1,10 @@
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FAQ, updateFAQ } from "@/lib/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Editor from "./Editor";
 
 interface FAQEditorProps {
@@ -19,9 +20,22 @@ const LANGUAGES = [
 ];
 
 export function FAQEditor({ faq, onClose, onSave }: FAQEditorProps) {
-  const [formData, setFormData] = useState<Partial<FAQ>>(
-    faq || { question: "", answer: "", language: "en" }
-  );
+  const [formData, setFormData] = useState<Partial<FAQ>>({
+    question: "",
+    answer: "",
+    language: "en"
+  });
+
+  // Update form data when faq prop changes
+  useEffect(() => {
+    if (faq) {
+      setFormData({
+        question: faq.question,
+        answer: faq.answer,
+        language: faq.language
+      });
+    }
+  }, [faq]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
