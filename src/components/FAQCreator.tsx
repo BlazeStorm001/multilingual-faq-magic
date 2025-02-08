@@ -15,7 +15,7 @@ interface FAQCreatorProps {
 const LANGUAGES = [
   { code: "en", name: "English" },
   { code: "hi", name: "Hindi" },
-  { code: "fr", name: "French" },
+  { code: "bn", name: "Bengali" },
 ];
 
 export function FAQCreator({ open, onClose, onSave }: FAQCreatorProps) {
