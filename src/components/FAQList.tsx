@@ -1,5 +1,6 @@
+
 import { useQuery } from "@tanstack/react-query";
-import { FAQ, fetchFAQs } from "@/lib/api";
+import { FAQ, fetchFAQs, deleteFAQ } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -25,6 +26,15 @@ export function FAQList() {
     queryKey: ["faqs", selectedLang],
     queryFn: () => fetchFAQs(selectedLang),
   });
+
+  const handleDelete = async (id: number) => {
+    if (confirm("Are you sure you want to delete this FAQ?")) {
+      const success = await deleteFAQ(id);
+      if (success) {
+        await refetch();
+      }
+    }
+  };
 
   const filteredFAQs = faqs.filter(
     (faq) =>
@@ -88,11 +98,7 @@ export function FAQList() {
                       variant="ghost"
                       size="icon"
                       className="text-destructive"
-                      onClick={() => {
-                        if (confirm("Are you sure you want to delete this FAQ?")) {
-                          // Implement delete functionality
-                        }
-                      }}
+                      onClick={() => handleDelete(faq.id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -122,8 +128,7 @@ export function FAQList() {
       <FAQCreator
         open={isCreating}
         onClose={() => setIsCreating(false)}
-        onSave={async (newFaq) => {
-          // Implement create functionality
+        onSave={async () => {
           await refetch();
           setIsCreating(false);
         }}
