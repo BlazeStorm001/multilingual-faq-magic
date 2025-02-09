@@ -129,8 +129,8 @@ export function FAQList() {
         open={isCreating}
         onClose={() => setIsCreating(false)}
         onSave={async () => {
-          await refetch();
           setIsCreating(false);
+          await refetch();
         }}
       />
     </div>

@@ -16,6 +16,7 @@ function Editor({ onChange, name, value }: EditorProps) {
         name={name}
         editor={ClassicEditor}
         config={{
+          licenseKey: "GPL",
           toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo']
         }}
         data={value}

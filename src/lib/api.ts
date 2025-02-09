@@ -11,7 +11,7 @@ export interface FAQ {
 
 export const fetchFAQs = async (lang?: string, id?: number): Promise<FAQ[]> => {
   try {
-    let url = `${API_URL}/faqs`;
+    let url = `${API_URL}/faqs/`;
     const params = new URLSearchParams();
     if (lang) params.append("lang", lang);
     if (id) params.append("id", id.toString());
