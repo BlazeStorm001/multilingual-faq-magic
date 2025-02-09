@@ -1,6 +1,5 @@
-
 import { useQuery } from "@tanstack/react-query";
-import { FAQ, fetchFAQs, deleteFAQ } from "@/lib/api";
+import { FAQ, fetchFAQs } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -27,15 +26,6 @@ export function FAQList() {
     queryFn: () => fetchFAQs(selectedLang),
   });
 
-  const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this FAQ?")) {
-      const success = await deleteFAQ(id);
-      if (success) {
-        await refetch();
-      }
-    }
-  };
-
   const filteredFAQs = faqs.filter(
     (faq) =>
       faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -51,12 +41,12 @@ export function FAQList() {
               placeholder="Search FAQs..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full"
+              className="w-full bg-white"
             />
           </div>
-          <div className="flex gap-2 w-full sm:w-auto">
+          <div className="flex gap-2 w-full sm:w-auto ">
             <Select value={selectedLang} onValueChange={setSelectedLang}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] bg-white">
                 <SelectValue placeholder="Select language" />
               </SelectTrigger>
               <SelectContent>
@@ -82,7 +72,7 @@ export function FAQList() {
           <div className="grid gap-4">
             {filteredFAQs.map((faq) => (
               <Card key={faq.id}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-blue-100">
                   <CardTitle className="text-lg font-medium">
                     {faq.question}
                   </CardTitle>
@@ -90,7 +80,7 @@ export function FAQList() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => setEditingFAQ(faq)}
+                      onClick={() => {setEditingFAQ(faq)}}
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -98,13 +88,17 @@ export function FAQList() {
                       variant="ghost"
                       size="icon"
                       className="text-destructive"
-                      onClick={() => handleDelete(faq.id)}
+                      onClick={() => {
+                        if (confirm("Are you sure you want to delete this FAQ?")) {
+                          // Implement delete functionality
+                        }
+                      }}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-5">
                   <div
                     className="prose max-w-none"
                     dangerouslySetInnerHTML={{ __html: faq.answer }}
@@ -128,9 +122,10 @@ export function FAQList() {
       <FAQCreator
         open={isCreating}
         onClose={() => setIsCreating(false)}
-        onSave={async () => {
-          setIsCreating(false);
+        onSave={async (newFaq) => {
+          // Implement create functionality
           await refetch();
+          setIsCreating(false);
         }}
       />
     </div>
