@@ -1,6 +1,9 @@
 # 1️⃣ Use Node.js image to build the Vite.js app
-FROM node:latest AS builder
+FROM node:18-alpine AS builder
 WORKDIR /app
+
+# Set memory limit for Node.js processes to prevent OOM issues
+ENV NODE_OPTIONS="--max-old-space-size=1024"
 COPY package*.json ./
 RUN npm install
 COPY . .
